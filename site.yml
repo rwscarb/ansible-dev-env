@@ -1,0 +1,7 @@
+---
+
+- hosts: localhost
+  connection: local
+  roles:
+    - { role: root, sudo: yes }
+    - { role: user, sudo: no }

@@ -1,0 +1,17 @@
+[ui]
+username = {{ name }} <{{ email }}>
+merge = internal:merge
+
+[phases]
+publish = False
+
+[extensions]
+hgext.fetch=
+hgext.hbisect=
+hgext.purge=
+hgext.rebase=
+hgext.shelve=
+transplant=
+hgk=
+color=
+mq=

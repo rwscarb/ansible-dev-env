@@ -1,0 +1,10 @@
+---
+
+name: John Smith
+email: jsmith@example.com
+
+ansible_file_cache: "{{ '~/.cache/ansible-env/' | expanduser }}"
+
+vagrant_download_link: 'https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb'
+dropbox_download_link: 'https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.02.12_amd64.deb'
+pycharm_download_link: 'https://download.jetbrains.com/python/pycharm-professional-4.0.5.tar.gz'

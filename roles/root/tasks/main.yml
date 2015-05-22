@@ -1,0 +1,150 @@
+---
+
+- name: install base common dependencies
+  apt:
+    name: '{{ item }}'
+    state: latest
+    update_cache: yes
+  with_items:
+    - build-essential
+    - linux-headers-generic
+    - python-apt
+    - python-software-properties
+    - dkms
+
+- name: add custom ppa's
+  apt_repository:
+    repo: '{{ item }}'
+  with_items:
+    - ppa:webupd8team/java
+    - ppa:mercurial-ppa/stable-snapshots
+
+- name: add third party apt keys
+  apt_key:
+    url: '{{ item }}'
+  with_items:
+    - 'https://www.virtualbox.org/download/oracle_vbox.asc'
+    - 'https://dl-ssl.google.com/linux/linux_signing_key.pub'
+
+- name: add third party apt repos
+  apt_repository:
+    repo: '{{ item }}'
+  with_items:
+    - 'deb http://dl.google.com/linux/chrome/deb/ stable main'
+    - 'deb http://download.virtualbox.org/virtualbox/debian trusty contrib'
+
+- name: auto-accept java evil licenses
+  debconf:
+    name: 'oracle-java7-installer'
+    question: 'shared/accepted-oracle-license-v1-1'
+    value: 'true'
+    vtype: 'select'
+
+- name: install common dependencies
+  apt:
+    name: '{{ item }}'
+    state: latest
+    update_cache: yes
+  with_items:
+    - ack-grep
+    - cloc
+    - cmake
+    - compiz
+    - compizconfig-settings-manager
+    - compiz-plugins
+    - cups-pdf
+    - curl
+    - filezilla
+    - gcolor2
+    - git
+    - google-chrome-stable
+    - gparted
+    - gtk-recordmydesktop
+    - imagemagick
+    - indicator-multiload
+    - 'libnss-mdns:i386'  # ms office 2007
+    - libreoffice
+    - 'libxml2:i386'      # ms office 2007
+    - mercurial
+    - nmap
+    - oracle-java7-installer
+    - pandoc
+    - python-dev
+    - python-gpgme
+    - python-lxml
+    - python-setuptools
+    - sqlite3
+    - sshfs
+    - sysstat
+    - texlive-latex-base
+    - tmux
+    - tree
+    - vim-gnome
+    - virtualbox-4.3
+    - vlc
+    - whois
+    - wireshark
+    - xclip
+    - xfce4-goodies
+    - xscreensaver
+    - xscreensaver-data
+    - xscreensaver-data-extra
+    - xubuntu-restricted-extras
+
+- name: remove light-locker in preference of xscreensaver
+  apt:
+    name: light-locker
+    state: absent
+
+- name: install useful python packages
+  pip:
+    name: '{{ item }}'
+  with_items:
+    - ipython
+    - virtualenv
+
+- name: ensure download cache directory exists
+  file:
+    state: directory
+    path: '{{ ansible_file_cache }}'
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
+
+- name: downloading vagrant deb from vagrantup
+  get_url:
+    url: '{{ vagrant_download_link }}'
+    dest: '{{ ansible_file_cache }}'
+    force: no
+  register: new_vagrant
+
+- name: install vagrant deb
+  apt:
+    deb: '{{ ansible_file_cache }}{{ vagrant_download_link | basename }}'
+  when: new_vagrant | changed
+
+- name: downloading dropbox deb
+  get_url:
+    url: '{{ dropbox_download_link | basename }}'
+    dest: '{{ ansible_file_cache }}'
+    force: no
+  register: new_dropbox
+
+- name: install dropbox deb
+  apt:
+    deb: '{{ ansible_file_cache }}{{ dropbox_download_link | basename }}'
+  when: new_dropbox | changed
+
+- name: set fs.inotify watches to 100000
+  lineinfile:
+    dest: /etc/sysctl.conf
+    regexp: '^fs.inotify.max_user_watches'
+    line: 'fs.inotify.max_user_watches=100000'
+  notify: reload sysctl
+
+- name: create pycharm folder
+  file:
+    path: /opt/pycharm
+    mode: 0755
+    state: directory
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
