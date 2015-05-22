@@ -124,7 +124,7 @@
 
 - name: downloading dropbox deb
   get_url:
-    url: '{{ dropbox_download_link | basename }}'
+    url: '{{ dropbox_download_link }}'
     dest: '{{ ansible_file_cache }}'
     force: no
   register: new_dropbox
