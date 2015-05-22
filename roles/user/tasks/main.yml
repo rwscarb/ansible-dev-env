@@ -110,3 +110,8 @@
   template:
     src: gitconfig
     dest: "{{ '~/.gitconfig' | expanduser }}"
+
+- name: make compiz the default windows manager
+  copy:
+    src: xfce4-session.xml
+    dest: "{{ '~/.config/xfce4/xfconf/xfce-perchannel-xml/' | expanduser }}"
