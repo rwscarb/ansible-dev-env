@@ -146,6 +146,7 @@
     dest: /etc/default/sysstat
     regexp: '^ENABLED="false"'
     line: 'ENABLED="true"'
+    backrefs: yes
   notify: reload sysstat
 
 - name: create pycharm folder
