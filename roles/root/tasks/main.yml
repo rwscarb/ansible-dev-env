@@ -141,6 +141,13 @@
     line: 'fs.inotify.max_user_watches=100000'
   notify: reload sysctl
 
+- name: enable sysstat
+  lineinfile:
+    dest: /etc/default/sysstat
+    regexp: '^ENABLED="false"'
+    line: 'ENABLED="true"'
+  notify: reload sysstat
+
 - name: create pycharm folder
   file:
     path: /opt/pycharm

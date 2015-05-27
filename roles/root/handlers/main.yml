@@ -2,3 +2,8 @@
 
 - name: reload sysctl
   command: sysctl -p
+
+- name: reload sysstat
+  service:
+    name: sysstat
+    state: restarted
