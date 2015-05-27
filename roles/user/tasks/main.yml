@@ -14,6 +14,7 @@
     - {src: '~/.dot-files/vim/vimrc', dest: '~/.vimrc'}
     - {src: '~/.dot-files/vim/vim', dest: '~/.vim'}
     - {src: '~/.dot-files/tmux/tmux.conf', dest: '~/.tmux.conf'}
+    - {src: '~/.dot-files/pycharm/ideavimrc', dest: '~/.ideavimrc'}
 
 - name: install vim plugins
   command: vim +PluginInstall +qall
