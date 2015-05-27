@@ -44,6 +44,7 @@
   get_url:
     url: '{{ pycharm_download_link }}'
     dest: '{{ ansible_file_cache }}'
+    sha256sum: '{{ pycharm_sha256 }}'
     force: no
   register: new_pycharm
 

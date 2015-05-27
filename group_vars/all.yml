@@ -7,4 +7,5 @@ ansible_file_cache: "{{ '~/.cache/ansible-env/' | expanduser }}"
 
 vagrant_download_link: 'https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb'
 dropbox_download_link: 'https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.02.12_amd64.deb'
-pycharm_download_link: 'https://download.jetbrains.com/python/pycharm-professional-4.0.5.tar.gz'
+pycharm_download_link: 'http://download-cf.jetbrains.com/python/pycharm-professional-4.5.1.tar.gz'
+pycharm_sha256: e1ffd7d839a6eeda2cfdb55d0069826aef27b71a4bbb4e0668309064e87b9ef3
