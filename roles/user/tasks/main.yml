@@ -19,7 +19,7 @@
 - name: install vim plugins
   command: vim +PluginInstall +qall
   args:
-    creates: "{{ '~/.dot-files/vim/vim/bundle/decipher-clips' | expanduser }}"
+    creates: "{{ '~/.dot-files/vim/vim/bundle/ctrlp.vim' | expanduser }}"
 
 - name: add ssh-keys
   user:
