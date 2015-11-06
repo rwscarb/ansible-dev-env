@@ -41,6 +41,7 @@
     src: compiz.profile
     dest: '{{ ansible_file_cache }}'
   register: new_compiz_settings
+  become_user: root
 
 - name: import compiz settings
   command: python -c "import compizconfig; compizconfig.Context().Import('{{ ansible_file_cache }}/compiz.profile')"

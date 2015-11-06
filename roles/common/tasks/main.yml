@@ -127,6 +127,7 @@
     state: directory
     path: '{{ ansible_file_cache }}'
     owner: '{{ user_name }}'
+    group: '{{ user_name }}'
 
 - name: downloading vagrant
   get_url:
@@ -165,6 +166,7 @@
     dest: /opt/pycharm/
     copy: no
     owner: '{{ user_name }}'
+    group: '{{ user_name }}'
   when: new_pycharm | changed
 
 - name: setting fs.inotify watches to 100,000 to make dropbox happy
