@@ -1,6 +1,0 @@
-Host *
-    ControlMaster auto
-    ControlPath ~/.ssh/control:%h:%p:%r
-
-Host example
-    HostName example.com

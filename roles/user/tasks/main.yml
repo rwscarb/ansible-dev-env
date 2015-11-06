@@ -1,119 +1,52 @@
 ---
 
-- name: fetch dotfiles repo
+- name: fetching personal dotfiles repo
   git:
-    repo: 'https://github.com/rwscarb/dot-files.git'
-    dest: "{{ '~/.dot-files' | expanduser }}"
+    repo: '{{ dot_files_repo }}'
+    dest: ~/.dot-files
 
-- name: create dotfile links
+- name: creating links for dotfiles
   file:
-    src: '{{ item.src | expanduser }}'
-    dest: '{{ item.dest | expanduser }}'
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
     state: link
   with_items:
-    - {src: '~/.dot-files/vim/vimrc', dest: '~/.vimrc'}
-    - {src: '~/.dot-files/vim/vim', dest: '~/.vim'}
-    - {src: '~/.dot-files/tmux/tmux.conf', dest: '~/.tmux.conf'}
+    - {src: '~/.dot-files/vim/vimrc',         dest: '~/.vimrc'}
+    - {src: '~/.dot-files/vim/vim',           dest: '~/.vim'}
+    - {src: '~/.dot-files/tmux/tmux.conf',    dest: '~/.tmux.conf'}
     - {src: '~/.dot-files/pycharm/ideavimrc', dest: '~/.ideavimrc'}
 
-- name: install vim plugins
+- name: installing vim plugins
   command: vim +PluginInstall +qall
   args:
-    creates: "{{ '~/.dot-files/vim/vim/bundle/ctrlp.vim' | expanduser }}"
+    creates: ~/.dot-files/vim/vim/bundle/ctrlp.vim
 
-- name: add ssh-keys
-  user:
-    name: '{{ ansible_user_id }}'
-    generate_ssh_key: yes
-    ssh_key_bits: 2048
-    ssh_key_file: .ssh/id_rsa
-    ssh_key_comment: '{{ email }}'
-
-- name: add ssh config file
+- name: making vim the default text editor
   copy:
-    src: ssh-config
-    dest: "{{ '~/.ssh/config' | expanduser }}"
-    mode: 0600
+    src: defaults.list
+    dest: ~/.local/share/applications/defaults.list
 
-- name: add basic bash_aliases file
-  copy:
-    src: bash_aliases
-    dest: "{{ '~/.bash_aliases' | expanduser }}"
-    mode: 0600
-
-- name: downloading pycharm
-  get_url:
-    url: '{{ pycharm_download_link }}'
-    dest: '{{ ansible_file_cache }}'
-    sha256sum: '{{ pycharm_sha256 }}'
-    force: no
-  register: new_pycharm
-
-- name: unarchive pycharm
-  unarchive:
-    src: "{{ ansible_file_cache }}{{ pycharm_download_link | basename }}"
-    dest: /opt/pycharm/
-    copy: no
-  when: new_pycharm | changed
-
-- name: unarchive lastpass
-  unarchive:
-    src: lplinux.tar.bz2
-    dest: '{{ ansible_file_cache }}'
-    creates: '{{ ansible_file_cache }}install_lastpass.sh'
-  register: new_lastpass
-
-- name: install lastpass
-  command: '{{ ansible_file_cache }}install_lastpass.sh'
-  when: new_lastpass | changed
-
-- name: install vagrant guest-additions plugin
+- name: installing vagrant guest-additions plugin
   command: vagrant plugin install vagrant-vbguest
   args:
-    creates: "{{ '~/.vagrant.d/gems/gems/vagrant-vbguest-0.10.0/vagrant-vbguest.gemspec' | expanduser }}"
+    creates: ~/.vagrant.d/gems/gems/vagrant-vbguest-*
 
-- name: setting terminal to use 256color
-  lineinfile:
-    dest: "{{ '~/.bashrc' | expanduser }}"
-    line: 'if [ -n "$DISPLAY" -a "$TERM" == "xterm" ]; then export TERM=xterm-256color; fi'
-
-- name: apply custom keyboard shortcuts
+- name: applying custom keyboard shortcuts
   copy:
     src: xfce4-keyboard-shortcuts.xml
-    dest: "{{ '~/.config/xfce4/xfconf/xfce-perchannel-xml/' | expanduser }}"
+    dest: ~/.config/xfce4/xfconf/xfce-perchannel-xml/
 
-- name: copy autostarts
-  copy:
-    src: autostart
-    dest: "{{ '~/.config/autostart' | expanduser }}"
-
-- name: copy compiz settings to host
+- name: copying compiz settings to ansible file cache
   copy:
     src: compiz.profile
     dest: '{{ ansible_file_cache }}'
   register: new_compiz_settings
 
 - name: import compiz settings
-  command: python -c "import compizconfig; compizconfig.Context().Import('{{ ansible_file_cache }}compiz.profile')"
+  command: python -c "import compizconfig; compizconfig.Context().Import('{{ ansible_file_cache }}/compiz.profile')"
   when: new_compiz_settings | changed
-
-- name: add xscreensaver preferences
-  copy:
-    src: xscreensaver
-    dest: "{{ '~/.xscreensaver' | expanduser }}"
-    mode: 0600
-
-- name: add hgrc
-  template:
-    src: hgrc
-    dest: "{{ '~/.hgrc' | expanduser }}"
-
-- name: add gitconfig
-  template:
-    src: gitconfig
-    dest: "{{ '~/.gitconfig' | expanduser }}"
 
 - name: make compiz the default windows manager
   copy:
     src: xfce4-session.xml
-    dest: "{{ '~/.config/xfce4/xfconf/xfce-perchannel-xml/' | expanduser }}"
+    dest: ~/.config/xfce4/xfconf/xfce-perchannel-xml/

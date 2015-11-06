@@ -1,9 +1,9 @@
 ---
 
-- name: reload sysctl
+- name: reread kernel options
   command: sysctl -p
 
-- name: reload sysstat
+- name: restart sysstat service
   service:
     name: sysstat
     state: restarted

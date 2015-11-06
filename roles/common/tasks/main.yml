@@ -1,0 +1,182 @@
+---
+
+- name: setting hostname
+  hostname:
+    name: '{{ hostname }}'
+
+- name: installing common packages
+  apt:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - git
+    - linux-headers-generic
+    - python-pip
+    - python-apt
+    - python-dev
+    - python-setuptools
+    - zsh
+
+- name: setting user's default shell
+  user:
+    name: '{{ user_name }}'
+    shell: '{{ user_shell }}'
+
+- name: upgrading python package manager
+  pip:
+    name: pip
+    state: latest
+
+- name: correcting apple aluminum f'n keys
+  lineinfile:
+    line: options hid_apple fnmode=2
+    dest: /etc/modprobe.d/hid_apple.conf
+  register: apple_keyboard_mod
+  tags:
+    - fn-keyboard
+
+- name: recompiling initramfs for apple's f'n keyboard
+  command: update-initramfs -u -k all
+  when: apple_keyboard_mod | changed
+  tags:
+    - fn-keyboard
+
+- name: adding custom ppa's, thanks guys!
+  apt_repository:
+    repo: '{{ item }}'
+  with_items:
+    - ppa:webupd8team/java      # Java, the easy way
+    - ppa:zeal-developers/ppa   # offline documentation tool
+    - ppa:linrunner/tlp         # thinkpad power settings
+
+- name: adding third party keys to aptitude
+  apt_key:
+    url: '{{ item }}'
+  with_items:
+    - https://www.virtualbox.org/download/oracle_vbox.asc
+    - https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+- name: adding third party repositories to aptitude
+  apt_repository:
+    repo: '{{ item }}'
+  with_items:
+    - deb http://dl.google.com/linux/chrome/deb/ stable main
+    - deb http://download.virtualbox.org/virtualbox/debian trusty contrib
+
+- name: accepting java's evil licenses
+  debconf:
+    name: oracle-java7-installer
+    question: shared/accepted-oracle-license-v1-1
+    value: 'true'
+    vtype: select
+
+- name: installing useful packages
+  apt:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - awscli
+    - ca-certificates
+    - cloc
+    - cmake
+    - compiz
+    - compizconfig-settings-manager
+    - compiz-plugins
+    - cups-pdf
+    - curl
+    - gcolor2
+    - google-chrome-stable
+    - gparted
+    - gtk-recordmydesktop
+    - imagemagick
+    - indicator-multiload
+    - libreoffice
+    - mercurial
+    - nmap
+    - oracle-java7-installer
+    - python-lxml
+    - sqlite3
+    - sshfs
+    - sysstat
+    - tlp
+    - tree
+    - vim-gnome
+    - virtualbox-5.0
+    - vlc
+    - whois
+    - wireshark
+    - xfce4-goodies
+    - xscreensaver
+    - xscreensaver-data
+    - xscreensaver-data-extra
+    - xubuntu-restricted-extras
+    - zeal
+
+- name: removing xubuntu's light-locker screensaver
+  apt:
+    name: light-locker
+    state: absent
+
+- name: installing vex for managing python virtualenvs
+  pip:
+    name: vex
+    state: latest
+
+- name: creating a folder to cache ansible's software downloads
+  file:
+    state: directory
+    path: '{{ ansible_file_cache }}'
+    owner: '{{ user_name }}'
+
+- name: downloading vagrant
+  get_url:
+    url: '{{ apps.vagrant.download_url }}'
+    dest: '{{ ansible_file_cache }}/{{ apps.vagrant.download_url | basename }}'
+    sha256sum: '{{ apps.vagrant.sha256 }}'
+  register: vagrant_pkg
+
+- name: installing vagrant
+  apt:
+    deb: '{{ ansible_file_cache }}/{{ apps.vagrant.download_url | basename }}'
+  when: vagrant_pkg | changed
+
+- name: downloading dropbox
+  get_url:
+    url: '{{ apps.dropbox.download_url }}'
+    dest: '{{ ansible_file_cache }}/{{ apps.dropbox.download_url | basename }}'
+    sha256sum: '{{ apps.dropbox.sha256 }}'
+  register: dropbox_pkg
+
+- name: installing dropbox
+  apt:
+    deb: '{{ ansible_file_cache }}/{{ apps.dropbox.download_url | basename }}'
+  when: dropbox_pkg | changed
+
+- name: downloading pycharm
+  get_url:
+    url: '{{ apps.pycharm.download_url }}'
+    dest: '{{ ansible_file_cache }}/{{ apps.pycharm.download_url | basename }}'
+    sha256sum: '{{ apps.pycharm.sha256 }}'
+  register: new_pycharm
+
+- name: unarchive pycharm
+  unarchive:
+    src: '{{ ansible_file_cache }}/{{ apps.pycharm.download_url | basename }}'
+    dest: /opt/pycharm/
+    copy: no
+    owner: '{{ user_name }}'
+  when: new_pycharm | changed
+
+- name: setting fs.inotify watches to 100,000 to make dropbox happy
+  lineinfile:
+    dest: /etc/sysctl.conf
+    regexp: ^fs.inotify.max_user_watches=
+    line: fs.inotify.max_user_watches=100000
+  notify: reread kernel options
+
+- name: enable sysstat
+  lineinfile:
+    dest: /etc/default/sysstat
+    regexp: ^ENABLED=
+    line: ENABLED="true"
+  notify: restart sysstat service

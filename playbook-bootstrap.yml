@@ -1,0 +1,35 @@
+---
+
+- hosts: localhost
+  connection: local
+  become: yes
+  become_user: root
+
+  vars:
+    user_full_name: Ryan Scarbery
+    user_name: ryan
+    user_email: ryan@bright.md
+    user_home_path: '/home/{{ user_name }}'
+    user_shell: /usr/bin/zsh
+    hostname: ryan.bright.md
+    ansible_file_cache: '{{ user_home_path }}/.cache/ansible-downloads-cache'
+    dot_files_repo: https://github.com/rwscarb/dot-files.git
+    apps:
+      vagrant:
+        download_url: https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_x86_64.deb
+        sha256: dcd2c2b5d7ae2183d82b8b363979901474ba8d2006410576ada89d7fa7668336
+      dropbox:
+        download_url: https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2015.10.28_amd64.deb
+        sha256: f9780cce3725ee307cdad8a835300e89483504059d302b3c6f91fe5cac0a5411
+      pycharm:
+        download_url: https://d1opms6zj7jotq.cloudfront.net/python/pycharm-professional-5.0.tar.gz
+        sha256: 066ca91c7d810765a96e82673d4241de855b82cd0d46dc88e46f00da00789c9a
+
+  pre_tasks:
+    - name: updating package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+  roles:
+    - { role: user, become_user: '{{ user_name }}' }
