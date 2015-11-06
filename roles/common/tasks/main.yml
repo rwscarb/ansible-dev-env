@@ -95,6 +95,7 @@
     - nmap
     - oracle-java7-installer
     - python-lxml
+    - python-compizconfig
     - sqlite3
     - sshfs
     - sysstat
@@ -116,11 +117,6 @@
   apt:
     name: light-locker
     state: absent
-
-- name: installing vex for managing python virtualenvs
-  pip:
-    name: vex
-    state: latest
 
 - name: creating a folder to cache ansible's software downloads
   file:

@@ -1,5 +1,11 @@
 ---
 
+- name: installing vex for managing python virtualenvs
+  pip:
+    name: vex
+    state: latest
+    extra_args: --user
+
 - name: fetching personal dotfiles repo
   git:
     repo: '{{ dot_files_repo }}'
