@@ -31,6 +31,7 @@
   lineinfile:
     line: options hid_apple fnmode=2
     dest: /etc/modprobe.d/hid_apple.conf
+    create: yes
   register: apple_keyboard_mod
   tags:
     - fn-keyboard
@@ -46,7 +47,6 @@
     repo: '{{ item }}'
   with_items:
     - ppa:webupd8team/java      # Java, the easy way
-    - ppa:zeal-developers/ppa   # offline documentation tool
     - ppa:linrunner/tlp         # thinkpad power settings
 
 - name: adding third party keys to aptitude
@@ -61,7 +61,7 @@
     repo: '{{ item }}'
   with_items:
     - deb http://dl.google.com/linux/chrome/deb/ stable main
-    - deb http://download.virtualbox.org/virtualbox/debian trusty contrib
+    - deb http://download.virtualbox.org/virtualbox/debian wily contrib
 
 - name: accepting java's evil licenses
   debconf:
@@ -96,10 +96,12 @@
     - oracle-java7-installer
     - python-lxml
     - python-compizconfig
+    - python-gpgme
     - sqlite3
     - sshfs
     - sysstat
     - tlp
+    - tmux
     - tree
     - vim-gnome
     - virtualbox-5.0
@@ -110,6 +112,7 @@
     - xscreensaver
     - xscreensaver-data
     - xscreensaver-data-extra
+    - xscreensaver-screensaver-bsod
     - xubuntu-restricted-extras
     - zeal
 
@@ -155,6 +158,14 @@
     dest: '{{ ansible_file_cache }}/{{ apps.pycharm.download_url | basename }}'
     sha256sum: '{{ apps.pycharm.sha256 }}'
   register: new_pycharm
+
+- name: creating a folder to cache ansible's software downloads
+  file:
+    state: directory
+    path: /opt/pycharm/
+    owner: '{{ user_name }}'
+    group: '{{ user_name }}'
+  when: new_pycharm | changed
 
 - name: unarchive pycharm
   unarchive:
