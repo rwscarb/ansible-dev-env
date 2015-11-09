@@ -76,6 +76,7 @@
     state: latest
   with_items:
     - awscli
+    - autojump
     - ca-certificates
     - cloc
     - cmake
