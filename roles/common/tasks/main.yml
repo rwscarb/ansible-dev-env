@@ -93,6 +93,7 @@
     - indicator-multiload
     - libreoffice
     - mercurial
+    - mongodb
     - nmap
     - oracle-java7-installer
     - python-lxml
