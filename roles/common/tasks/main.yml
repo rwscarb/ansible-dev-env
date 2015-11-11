@@ -95,6 +95,8 @@
     - mercurial
     - mongodb
     - nmap
+    - nvidia-346
+    - nvidia-prime
     - oracle-java7-installer
     - python-lxml
     - python-compizconfig
