@@ -1,8 +1,8 @@
 ---
 
-- name: installing vex for managing python virtualenvs
+- name: installing virtualenvwrapper for managing python virtualenvs
   pip:
-    name: vex
+    name: virtualenvwrapper
     state: latest
     extra_args: --user
 
