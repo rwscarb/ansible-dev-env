@@ -1,9 +1,5 @@
 ---
 
-- name: setting hostname
-  hostname:
-    name: '{{ hostname }}'
-
 - name: installing common packages
   apt:
     name: '{{ item }}'
@@ -16,11 +12,6 @@
     - python-dev
     - python-setuptools
     - zsh
-
-- name: setting user's default shell
-  user:
-    name: '{{ user_name }}'
-    shell: '{{ user_shell }}'
 
 - name: upgrading python package manager
   pip:
@@ -61,7 +52,7 @@
     repo: '{{ item }}'
   with_items:
     - deb http://dl.google.com/linux/chrome/deb/ stable main
-    - deb http://download.virtualbox.org/virtualbox/debian wily contrib
+    - deb http://download.virtualbox.org/virtualbox/debian xenial contrib
 
 - name: accepting java's evil licenses
   debconf:
@@ -89,18 +80,19 @@
     - google-chrome-stable
     - gparted
     - gtk-recordmydesktop
+    - htop
     - imagemagick
     - indicator-multiload
+    - iotop
     - libreoffice
     - mercurial
     - mongodb
     - nmap
-    - nvidia-346
-    - nvidia-prime
     - oracle-java7-installer
     - python-lxml
     - python-compizconfig
     - python-gpgme
+    - redshift
     - sqlite3
     - sshfs
     - sysstat
@@ -108,7 +100,7 @@
     - tmux
     - tree
     - vim-gnome
-    - virtualbox-5.0
+    - virtualbox-5.1
     - vlc
     - whois
     - wireshark
@@ -125,61 +117,6 @@
   apt:
     name: light-locker
     state: absent
-
-- name: creating a folder to cache ansible's software downloads
-  file:
-    state: directory
-    path: '{{ ansible_file_cache }}'
-    owner: '{{ user_name }}'
-    group: '{{ user_name }}'
-
-- name: downloading vagrant
-  get_url:
-    url: '{{ apps.vagrant.download_url }}'
-    dest: '{{ ansible_file_cache }}/{{ apps.vagrant.download_url | basename }}'
-    sha256sum: '{{ apps.vagrant.sha256 }}'
-  register: vagrant_pkg
-
-- name: installing vagrant
-  apt:
-    deb: '{{ ansible_file_cache }}/{{ apps.vagrant.download_url | basename }}'
-  when: vagrant_pkg | changed
-
-- name: downloading dropbox
-  get_url:
-    url: '{{ apps.dropbox.download_url }}'
-    dest: '{{ ansible_file_cache }}/{{ apps.dropbox.download_url | basename }}'
-    sha256sum: '{{ apps.dropbox.sha256 }}'
-  register: dropbox_pkg
-
-- name: installing dropbox
-  apt:
-    deb: '{{ ansible_file_cache }}/{{ apps.dropbox.download_url | basename }}'
-  when: dropbox_pkg | changed
-
-- name: downloading pycharm
-  get_url:
-    url: '{{ apps.pycharm.download_url }}'
-    dest: '{{ ansible_file_cache }}/{{ apps.pycharm.download_url | basename }}'
-    sha256sum: '{{ apps.pycharm.sha256 }}'
-  register: new_pycharm
-
-- name: creating a folder to cache ansible's software downloads
-  file:
-    state: directory
-    path: /opt/pycharm/
-    owner: '{{ user_name }}'
-    group: '{{ user_name }}'
-  when: new_pycharm | changed
-
-- name: unarchive pycharm
-  unarchive:
-    src: '{{ ansible_file_cache }}/{{ apps.pycharm.download_url | basename }}'
-    dest: /opt/pycharm/
-    copy: no
-    owner: '{{ user_name }}'
-    group: '{{ user_name }}'
-  when: new_pycharm | changed
 
 - name: setting fs.inotify watches to 100,000 to make dropbox happy
   lineinfile:

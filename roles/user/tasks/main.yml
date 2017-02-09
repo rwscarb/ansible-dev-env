@@ -6,22 +6,6 @@
     state: latest
     extra_args: --user
 
-- name: fetching personal dotfiles repo
-  git:
-    repo: '{{ dot_files_repo }}'
-    dest: ~/.dot-files
-
-- name: creating links for dotfiles
-  file:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-    state: link
-  with_items:
-    - {src: '~/.dot-files/vim/vimrc',         dest: '~/.vimrc'}
-    - {src: '~/.dot-files/vim/vim',           dest: '~/.vim'}
-    - {src: '~/.dot-files/tmux/tmux.conf',    dest: '~/.tmux.conf'}
-    - {src: '~/.dot-files/pycharm/ideavimrc', dest: '~/.ideavimrc'}
-
 - name: installing vim plugins
   command: vim +PluginInstall +qall
   args:
@@ -55,12 +39,12 @@
 - name: copying compiz settings to ansible file cache
   copy:
     src: compiz.profile
-    dest: '{{ ansible_file_cache }}'
+    dest: '~/'
   register: new_compiz_settings
   become_user: root
 
 - name: import compiz settings
-  command: python -c "import compizconfig; compizconfig.Context().Import('{{ ansible_file_cache }}/compiz.profile')"
+  command: python -c "import compizconfig; import os; compizconfig.Context().Import(os.path.expanduser('~/compiz.profile'))"
   when: new_compiz_settings | changed
 
 - name: make compiz the default windows manager

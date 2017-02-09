@@ -2,4 +2,3 @@
 
 dependencies:
   - { role: common, become: yes, become_user: root }
-  - { role: docker, become: yes, become_user: root }
