@@ -51,3 +51,8 @@
   copy:
     src: xfce4-session.xml
     dest: ~/.config/xfce4/xfconf/xfce-perchannel-xml/
+
+- name: copying over redshift to improve human sleep
+  copy:
+    src: redshift.conf
+    dest: ~/.config/
