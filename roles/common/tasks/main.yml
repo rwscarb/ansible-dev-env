@@ -13,6 +13,11 @@
     - python-setuptools
     - zsh
 
+- name: start using zsh
+  user:
+    name: '{{ ansible_user }}'
+    shell: /usr/bin/zsh
+
 - name: upgrading python package manager
   pip:
     name: pip
