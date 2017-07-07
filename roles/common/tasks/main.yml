@@ -44,6 +44,7 @@
   with_items:
     - ppa:webupd8team/java
     - ppa:linrunner/tlp
+    - ppa:nathan-renniewaldock/flux
 
 - name: adding third party keys to aptitude
   apt_key:
@@ -86,6 +87,7 @@
     - cups-pdf
     - curl
     - docker-ce
+    - fluxgui
     - gcolor2
     - gimp
     - google-chrome-stable
@@ -100,7 +102,6 @@
     - python-lxml
     - python-compizconfig
     - python-gpgme
-    - redshift
     - software-properties-common
     - sqlite3
     - sshfs
