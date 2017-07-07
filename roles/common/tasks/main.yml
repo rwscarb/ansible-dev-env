@@ -47,6 +47,7 @@
     - https://www.virtualbox.org/download/oracle_vbox.asc
     - https://www.virtualbox.org/download/oracle_vbox_2016.asc
     - https://dl-ssl.google.com/linux/linux_signing_key.pub
+    - https://download.docker.com/linux/ubuntu/gpg
 
 - name: adding third party repositories to aptitude
   apt_repository:
@@ -54,6 +55,7 @@
   with_items:
     - deb http://dl.google.com/linux/chrome/deb/ stable main
     - deb http://download.virtualbox.org/virtualbox/debian xenial contrib
+    - deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
 
 - name: accepting java's evil licenses
   debconf:
@@ -67,6 +69,7 @@
     name: '{{ item }}'
     state: latest
   with_items:
+    - apt-transport-https
     - awscli
     - autojump
     - ca-certificates
@@ -77,6 +80,7 @@
     - compiz-plugins
     - cups-pdf
     - curl
+    - docker-ce
     - gcolor2
     - gimp
     - google-chrome-stable
@@ -92,6 +96,7 @@
     - python-compizconfig
     - python-gpgme
     - redshift
+    - software-properties-common
     - sqlite3
     - sshfs
     - sysstat
