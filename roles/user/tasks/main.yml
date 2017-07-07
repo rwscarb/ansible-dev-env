@@ -40,3 +40,8 @@
   copy:
     src: redshift.conf
     dest: ~/.config/
+
+- name: create handy folder for mounting things
+  file:
+    state: directory
+    path: ~/mnt/
