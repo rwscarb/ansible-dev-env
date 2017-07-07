@@ -1,11 +1,5 @@
 ---
 
-- name: installing virtualenvwrapper for managing python virtualenvs
-  pip:
-    name: virtualenvwrapper
-    state: latest
-    extra_args: --user
-
 - name: installing vim plugins
   command: vim +PluginInstall +qall
   args:
@@ -20,16 +14,6 @@
   copy:
     src: defaults.list
     dest: ~/.local/share/applications/defaults.list
-
-- name: installing vagrant guest-additions plugin
-  command: vagrant plugin install vagrant-vbguest
-  args:
-    creates: ~/.vagrant.d/gems/gems/vagrant-vbguest-*
-
-- name: installing vagrant hostsupdater plugin
-  command: vagrant plugin install vagrant-hostsupdater
-  args:
-    creates: ~/.vagrant.d/gems/gems/vagrant-hostsupdater-*
 
 - name: applying custom keyboard shortcuts
   copy:

@@ -37,14 +37,15 @@
   apt_repository:
     repo: '{{ item }}'
   with_items:
-    - ppa:webupd8team/java      # Java, the easy way
-    - ppa:linrunner/tlp         # thinkpad power settings
+    - ppa:webupd8team/java
+    - ppa:linrunner/tlp
 
 - name: adding third party keys to aptitude
   apt_key:
     url: '{{ item }}'
   with_items:
     - https://www.virtualbox.org/download/oracle_vbox.asc
+    - https://www.virtualbox.org/download/oracle_vbox_2016.asc
     - https://dl-ssl.google.com/linux/linux_signing_key.pub
 
 - name: adding third party repositories to aptitude
@@ -56,7 +57,7 @@
 
 - name: accepting java's evil licenses
   debconf:
-    name: oracle-java7-installer
+    name: oracle-java8-installer
     question: shared/accepted-oracle-license-v1-1
     value: 'true'
     vtype: select
@@ -77,6 +78,7 @@
     - cups-pdf
     - curl
     - gcolor2
+    - gimp
     - google-chrome-stable
     - gparted
     - gtk-recordmydesktop
@@ -84,11 +86,8 @@
     - imagemagick
     - indicator-multiload
     - iotop
-    - libreoffice
-    - mercurial
-    - mongodb
     - nmap
-    - oracle-java7-installer
+    - oracle-java8-installer
     - python-lxml
     - python-compizconfig
     - python-gpgme
@@ -99,7 +98,9 @@
     - tlp
     - tmux
     - tree
+    - vagrant
     - vim-gnome
+    - virtualenvwrapper
     - virtualbox-5.1
     - vlc
     - whois
