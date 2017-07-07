@@ -45,3 +45,4 @@
   file:
     state: directory
     path: ~/mnt/
+    mode: 0700
