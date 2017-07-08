@@ -95,6 +95,7 @@
     - cups-pdf
     - curl
     - docker-ce
+    - dosbox
     - fluxgui
     - gcolor2
     - gimp
@@ -132,6 +133,17 @@
     - xscreensaver-screensaver-bsod
     - xubuntu-restricted-extras
     - zeal
+
+- name: installing missing bluetooth module
+  apt:
+    name: pulseaudio-module-bluetooth
+    state: latest
+  register: bt_fix
+  tags: bt
+
+- command: pactl load-module module-bluetooth-discover
+  when: bt_fix | change
+  tags: bt
 
 - name: removing xubuntu's light-locker screensaver
   apt:
