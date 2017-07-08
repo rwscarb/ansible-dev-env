@@ -108,6 +108,7 @@
     - iotop
     - nmap
     - oracle-java8-installer
+    - python3-dev
     - python-lxml
     - python-compizconfig
     - python-gpgme
