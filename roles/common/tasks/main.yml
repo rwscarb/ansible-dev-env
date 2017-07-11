@@ -164,3 +164,12 @@
     regexp: ^ENABLED=
     line: ENABLED="true"
   notify: restart sysstat service
+
+- name: copy intel x11 config for chrome
+  copy:
+    src: 10-intel-chrome.conf
+    dest: /usr/share/X11/xorg.conf.d/
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart lightdm service

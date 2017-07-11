@@ -7,3 +7,8 @@
   service:
     name: sysstat
     state: restarted
+
+- name: restart lightdm service
+  service:
+    name: lightdm
+    state: restarted
