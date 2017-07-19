@@ -96,6 +96,7 @@
     - curl
     - docker-ce
     - dosbox
+    - exfat-fuse
     - fluxgui
     - gcolor2
     - gimp
