@@ -13,11 +13,29 @@
     - python-setuptools
     - zsh
 
+- name: create application specific groups
+  group:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - docker
+    - plugdev
+
+- name: hackeRF rules!
+  file:
+    src: 52-hackrf.rules
+    dest: /etc/udev/rules.d/52-hackrf.rules
+    owner: root
+    group: root
+    mode: 0600
+
 - name: start using zsh
   user:
     name: '{{ ansible_user }}'
     shell: /usr/bin/zsh
-    groups: docker
+    groups:
+      - docker
+      - plugdev
     append: yes
 
 - name: upgrading python package manager
@@ -28,6 +46,11 @@
 - name: install virtualenvwrapper
   pip:
     name: virtualenvwrapper
+    state: latest
+
+- name: install ipython
+  pip:
+    name: ipython
     state: latest
 
 - name: correcting apple aluminum f'n keys
@@ -86,6 +109,7 @@
     - apt-transport-https
     - awscli
     - autojump
+    - bitcoin-qt
     - ca-certificates
     - cloc
     - cmake
@@ -100,9 +124,11 @@
     - fluxgui
     - gcolor2
     - gimp
+    - gnuradio
     - google-chrome-stable
     - gparted
     - gtk-recordmydesktop
+    - hackrf
     - htop
     - imagemagick
     - indicator-multiload
@@ -119,6 +145,7 @@
     - sysstat
     - tlp
     - tmux
+    - tor
     - tree
     - vagrant
     - vim-gnome
