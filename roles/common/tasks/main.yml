@@ -21,14 +21,6 @@
     - docker
     - plugdev
 
-- name: hackeRF rules!
-  file:
-    src: 52-hackrf.rules
-    dest: /etc/udev/rules.d/52-hackrf.rules
-    owner: root
-    group: root
-    mode: 0600
-
 - name: start using zsh
   user:
     name: '{{ ansible_user }}'
@@ -146,6 +138,7 @@
     - tlp
     - tmux
     - tor
+    - tor-arm
     - tree
     - vagrant
     - vim-gnome
@@ -162,6 +155,20 @@
     - xscreensaver-screensaver-bsod
     - xubuntu-restricted-extras
     - zeal
+
+- name: hackeRF rules!
+  file:
+    src: 52-hackrf.rules
+    dest: /etc/udev/rules.d/52-hackrf.rules
+    owner: root
+    group: root
+    mode: 0600
+
+- name: don't allow hackRF any sleep
+  lineinfile:
+    path: /etc/default/tlp
+    line: USB_BLACKLIST="1d50:6089 1d50:604b"
+  notify: restart tlp service
 
 - name: installing missing bluetooth module
   apt:

@@ -12,3 +12,8 @@
   service:
     name: lightdm
     state: restarted
+
+- name: restart tlp service
+  service:
+    name: tlp
+    state: restarted
