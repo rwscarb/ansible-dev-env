@@ -166,7 +166,7 @@
     - librtlsdr0
 
 - name: hackeRF rules!
-  file:
+  copy:
     src: 52-hackrf.rules
     dest: /etc/udev/rules.d/52-hackrf.rules
     owner: root

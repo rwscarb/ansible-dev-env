@@ -8,11 +8,6 @@
     name: sysstat
     state: restarted
 
-- name: restart lightdm service
-  service:
-    name: lightdm
-    state: restarted
-
 - name: restart tlp service
   service:
     name: tlp
