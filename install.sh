@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+~/.dropbox-dist/dropboxd
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install -y git python-pip
