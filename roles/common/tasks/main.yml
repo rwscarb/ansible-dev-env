@@ -120,7 +120,6 @@
     - google-chrome-stable
     - gparted
     - gtk-recordmydesktop
-    - hackrf
     - htop
     - imagemagick
     - indicator-multiload
@@ -155,6 +154,16 @@
     - xscreensaver-screensaver-bsod
     - xubuntu-restricted-extras
     - zeal
+
+- name: installing sdr fun
+  apt:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - hackrf
+    - mono-complete
+    - libportaudio2
+    - librtlsdr0
 
 - name: hackeRF rules!
   file:
