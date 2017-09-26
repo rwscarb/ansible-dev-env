@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
-DBUS_SESSION_BUS_ADDRESS="" ~/.dropbox-dist/dropboxd &
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install -y git python-pip
@@ -19,3 +17,5 @@ git clone https://github.com/rwscarb/ansible-dev-env.git || true
 cd ansible-dev-env/
 ansible-playbook -e user=ford playbook-bootstrap.yml -i inventory
 sudo reboot
+# wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+# DBUS_SESSION_BUS_ADDRESS="" ~/.dropbox-dist/dropboxd &
