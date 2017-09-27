@@ -169,7 +169,7 @@
 - name: hackeRF rules!
   copy:
     src: 52-hackrf.rules
-    dest: /etc/udev/rules.d/52-hackrf.rules
+    dest: /etc/udev/rules.d/
     owner: root
     group: root
     mode: 0600
@@ -179,6 +179,14 @@
     path: /etc/default/tlp
     line: USB_BLACKLIST="1d50:6089 1d50:604b"
   notify: restart tlp service
+
+- name: ledger nano rules!
+  copy:
+    src: 20-ledger-nano.rules
+    dest: /etc/udev/rules.d/
+    owner: root
+    group: root
+    mode: 0600
 
 - name: installing missing bluetooth module
   apt:
