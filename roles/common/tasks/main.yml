@@ -20,6 +20,7 @@
   with_items:
     - docker
     - plugdev
+    - vboxusers
 
 - name: start using zsh
   user:
@@ -28,6 +29,7 @@
     groups:
       - docker
       - plugdev
+      - vboxusers
     append: yes
 
 - name: upgrading python package manager
