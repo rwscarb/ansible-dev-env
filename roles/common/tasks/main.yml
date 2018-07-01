@@ -13,38 +13,9 @@
     - python-setuptools
     - zsh
 
-- name: create application specific groups
-  group:
-    name: '{{ item }}'
-    state: present
-  with_items:
-    - docker
-    - plugdev
-    - vboxusers
-
-- name: start using zsh
-  user:
-    name: '{{ ansible_user }}'
-    shell: /usr/bin/zsh
-    groups:
-      - docker
-      - plugdev
-      - vboxusers
-    append: yes
-
 - name: upgrading python package manager
   pip:
     name: pip
-    state: latest
-
-- name: install virtualenvwrapper
-  pip:
-    name: virtualenvwrapper
-    state: latest
-
-- name: install ipython
-  pip:
-    name: ipython
     state: latest
 
 - name: correcting apple aluminum f'n keys
@@ -58,7 +29,7 @@
 
 - name: recompiling initramfs for apple's f'n keyboard
   command: update-initramfs -u -k all
-  when: apple_keyboard_mod | changed
+  when: apple_keyboard_mod is changed
   tags:
     - fn-keyboard
 
@@ -66,27 +37,24 @@
   apt_repository:
     repo: '{{ item }}'
   with_items:
-    - ppa:webupd8team/java
-    - ppa:linrunner/tlp
+    - ppa:webupd8team/java       # Java, the easy way
+    - ppa:linrunner/tlp          # thinkpad power settings
+    - ppa:peek-developers/stable # gif capture recorder
     - ppa:nathan-renniewaldock/flux
-    - ppa:bitcoin/bitcoin
 
 - name: adding third party keys to aptitude
   apt_key:
     url: '{{ item }}'
   with_items:
-    - https://www.virtualbox.org/download/oracle_vbox.asc
     - https://www.virtualbox.org/download/oracle_vbox_2016.asc
     - https://dl-ssl.google.com/linux/linux_signing_key.pub
-    - https://download.docker.com/linux/ubuntu/gpg
 
 - name: adding third party repositories to aptitude
   apt_repository:
     repo: '{{ item }}'
   with_items:
     - deb http://dl.google.com/linux/chrome/deb/ stable main
-    - deb http://download.virtualbox.org/virtualbox/debian xenial contrib
-    - deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    - deb https://download.virtualbox.org/virtualbox/debian xenial contrib
 
 - name: accepting java's evil licenses
   debconf:
@@ -100,10 +68,8 @@
     name: '{{ item }}'
     state: latest
   with_items:
-    - apt-transport-https
     - awscli
     - autojump
-    - bitcoin-qt
     - ca-certificates
     - cloc
     - cmake
@@ -112,13 +78,8 @@
     - compiz-plugins
     - cups-pdf
     - curl
-    - docker-ce
-    - dosbox
-    - exfat-fuse
     - fluxgui
-    - gcolor2
     - gimp
-    - gnuradio
     - google-chrome-stable
     - gparted
     - gtk-recordmydesktop
@@ -126,27 +87,23 @@
     - imagemagick
     - indicator-multiload
     - iotop
+    - libreoffice
+    - mercurial
     - nmap
+    - npm
     - oracle-java8-installer
-    - python3-dev
+    - peek
     - python-lxml
     - python-compizconfig
-    - python-gpgme
-    - software-properties-common
     - sqlite3
     - sshfs
     - sysstat
     - tlp
     - tmux
-    - tor
-    - tor-arm
     - tree
-    - vagrant
     - vim-gnome
-    - virtualbox-5.1
+    - virtualbox
     - vlc
-    - vokoscreen
-    - weechat
     - whois
     - wireshark
     - xclip
@@ -158,48 +115,9 @@
     - xubuntu-restricted-extras
     - zeal
 
-- name: installing sdr fun
-  apt:
-    name: '{{ item }}'
-    state: latest
-  with_items:
-    - hackrf
-    - mono-complete
-    - libportaudio2
-    - librtlsdr0
-
-- name: hackeRF rules!
-  copy:
-    src: 52-hackrf.rules
-    dest: /etc/udev/rules.d/
-    owner: root
-    group: root
-    mode: 0600
-
-- name: don't allow hackRF any sleep
-  lineinfile:
-    path: /etc/default/tlp
-    line: USB_BLACKLIST="1d50:6089 1d50:604b"
-  notify: restart tlp service
-
-- name: ledger nano rules!
-  copy:
-    src: 20-ledger-nano.rules
-    dest: /etc/udev/rules.d/
-    owner: root
-    group: root
-    mode: 0600
-
-- name: installing missing bluetooth module
-  apt:
-    name: pulseaudio-module-bluetooth
-    state: latest
-  register: bt_fix
-  tags: bt
-
-- command: pactl load-module module-bluetooth-discover
-  when: bt_fix | change
-  tags: bt
+- name: create wireshark group
+  group:
+    name: wireshark
 
 - name: removing xubuntu's light-locker screensaver
   apt:
@@ -220,11 +138,25 @@
     line: ENABLED="true"
   notify: restart sysstat service
 
-- name: copy intel x11 config for chrome
-  copy:
-    src: 10-intel-chrome.conf
-    dest: /usr/share/X11/xorg.conf.d/
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart lightdm service
+- name: add docker apt key
+  apt_key:
+    id: 0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: add docker deb repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+
+- name: install docker ce
+  apt:
+    name: docker-ce
+    update_cache: yes
+
+- name: install docker python modules
+  pip:
+    name: docker-compose
+
+- name: install n node package
+  npm:
+    name: n
+    global: yes

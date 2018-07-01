@@ -1,5 +1,44 @@
 ---
 
+- name: configure user account
+  user:
+    name: '{{ user }}'
+    shell: /usr/bin/zsh
+    groups:
+      - plugdev
+      - vboxusers
+      - wireshark
+      - docker
+    append: yes
+  become_user: root
+
+- name: fetch dot-files
+  git:
+    repo: https://github.com/rwscarb/dot-files.git
+    dest: ~/.dot-files
+  register: dot_files
+
+- name: install dot-files
+  command: ~/.dot-files/install.sh
+  args:
+    chdir: ~/.dot-files
+  when: dot_files is changed
+
+- name: installing virtualenvwrapper for managing python virtualenvs
+  pip:
+    name: virtualenvwrapper
+    state: latest
+    extra_args: --user
+
+- name: install tmux settings
+  command: '{{ item }}'
+  with_items:
+    - tmux start-server
+    - tmux new-session -d
+    - ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+    - tmux kill-server
+  when: dot_files is changed
+
 - name: installing vim plugins
   command: vim +PluginInstall +qall
   args:
@@ -25,24 +64,12 @@
     src: compiz.profile
     dest: '~/'
   register: new_compiz_settings
-  become_user: root
 
 - name: import compiz settings
   command: python -c "import compizconfig; import os; compizconfig.Context().Import(os.path.expanduser('~/compiz.profile'))"
-  when: new_compiz_settings | changed
+  when: new_compiz_settings is changed
 
 - name: make compiz the default windows manager
   copy:
     src: xfce4-session.xml
     dest: ~/.config/xfce4/xfconf/xfce-perchannel-xml/
-
-- name: copying over redshift to improve human sleep
-  copy:
-    src: redshift.conf
-    dest: ~/.config/
-
-- name: create handy folder for mounting things
-  file:
-    state: directory
-    path: ~/mnt/
-    mode: 0700

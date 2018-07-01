@@ -1,4 +1,4 @@
 ---
 
 dependencies:
-  - { role: common, become: yes, become_user: root }
+  - { role: common, become_user: root }

@@ -3,9 +3,8 @@
 - hosts: localhost
   connection: local
   become: yes
-  become_user: root
   vars:
-    user: ryan
+    user: ford
   pre_tasks:
     - name: updating package cache
       apt:
