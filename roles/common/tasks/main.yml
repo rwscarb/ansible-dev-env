@@ -93,6 +93,7 @@
     - npm
     - oracle-java8-installer
     - peek
+    - postgresql-client
     - python-lxml
     - python-compizconfig
     - sqlite3
