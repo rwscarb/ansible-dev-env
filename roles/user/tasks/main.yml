@@ -54,6 +54,11 @@
     src: defaults.list
     dest: ~/.local/share/applications/defaults.list
 
+- name: copy xscreensaver settings
+  copy:
+    src: xscreensaver
+    dest: ~/.xscreensaver
+
 - name: applying custom keyboard shortcuts
   copy:
     src: xfce4-keyboard-shortcuts.xml
