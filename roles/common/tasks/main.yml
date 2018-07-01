@@ -160,3 +160,14 @@
   npm:
     name: n
     global: yes
+
+- name: copy over lenovo dock udev rules for monitor management
+  copy:
+    src: 84-thinkpad-dock.rules
+    dest: /etc/udev/rules.d/
+  notify: reload udev rules
+
+- name: copy over lenovo dock monitor changing script
+  template:
+    src: monitors.sh.j2
+    dest: /usr/local/bin/monitors.sh
