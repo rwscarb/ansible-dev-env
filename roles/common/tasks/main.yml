@@ -41,6 +41,7 @@
     - ppa:linrunner/tlp          # thinkpad power settings
     - ppa:peek-developers/stable # gif capture recorder
     - ppa:nathan-renniewaldock/flux
+    - ppa:graphics-drivers/ppa
 
 - name: adding third party keys to aptitude
   apt_key:
@@ -91,6 +92,7 @@
     - mercurial
     - nmap
     - npm
+    - nvidia-390
     - oracle-java8-installer
     - peek
     - postgresql-client
