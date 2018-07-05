@@ -95,7 +95,8 @@
     - nvidia-390
     - oracle-java8-installer
     - peek
-    - postgresql-client
+    - postgresql
+    - postgresql-contrib
     - python-lxml
     - python-compizconfig
     - sqlite3
