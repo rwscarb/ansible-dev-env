@@ -93,12 +93,14 @@
     - nmap
     - npm
     - nvidia-390
+    - openvpn
     - oracle-java8-installer
     - peek
     - postgresql
     - postgresql-contrib
     - python-lxml
     - python-compizconfig
+    - rdesktop
     - sqlite3
     - sshfs
     - sysstat
@@ -110,6 +112,7 @@
     - vlc
     - whois
     - wireshark
+    - xchat
     - xclip
     - xfce4-goodies
     - xscreensaver
