@@ -72,6 +72,7 @@
     - awscli
     - autojump
     - ca-certificates
+    - cewl
     - cloc
     - cmake
     - compiz
@@ -79,7 +80,7 @@
     - compiz-plugins
     - cups-pdf
     - curl
-    - fluxgui
+    - filezilla
     - gimp
     - google-chrome-stable
     - gparted
@@ -88,6 +89,7 @@
     - imagemagick
     - indicator-multiload
     - iotop
+    - john
     - libreoffice
     - mercurial
     - nmap
@@ -101,6 +103,7 @@
     - python-lxml
     - python-compizconfig
     - rdesktop
+    - redshift-gtk
     - sqlite3
     - sshfs
     - sysstat
