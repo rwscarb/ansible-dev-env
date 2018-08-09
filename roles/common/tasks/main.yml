@@ -13,10 +13,14 @@
     - python-setuptools
     - zsh
 
-- name: upgrading python package manager
+- name: installing global python packages
   pip:
-    name: pip
+    name: '{{ item }}'
     state: latest
+  with_items:
+    - pip
+    - ipython
+    - httpie
 
 - name: correcting apple aluminum f'n keys
   lineinfile:
