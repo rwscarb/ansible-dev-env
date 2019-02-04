@@ -11,6 +11,7 @@
     - python-apt
     - python-dev
     - python-setuptools
+    - virtualenvwrapper
     - zsh
 
 - name: installing global python packages
@@ -22,21 +23,6 @@
     - ipython
     - httpie
 
-- name: correcting apple aluminum f'n keys
-  lineinfile:
-    line: options hid_apple fnmode=2
-    dest: /etc/modprobe.d/hid_apple.conf
-    create: yes
-  register: apple_keyboard_mod
-  tags:
-    - fn-keyboard
-
-- name: recompiling initramfs for apple's f'n keyboard
-  command: update-initramfs -u -k all
-  when: apple_keyboard_mod is changed
-  tags:
-    - fn-keyboard
-
 - name: adding custom ppa's, thanks guys!
   apt_repository:
     repo: '{{ item }}'
@@ -45,21 +31,18 @@
     - ppa:linrunner/tlp          # thinkpad power settings
     - ppa:peek-developers/stable # gif capture recorder
     - ppa:nathan-renniewaldock/flux
-    - ppa:graphics-drivers/ppa
 
 - name: adding third party keys to aptitude
   apt_key:
     url: '{{ item }}'
   with_items:
     - https://www.virtualbox.org/download/oracle_vbox_2016.asc
-    - https://dl-ssl.google.com/linux/linux_signing_key.pub
 
 - name: adding third party repositories to aptitude
   apt_repository:
     repo: '{{ item }}'
   with_items:
-    - deb http://dl.google.com/linux/chrome/deb/ stable main
-    - deb https://download.virtualbox.org/virtualbox/debian xenial contrib
+    - 'deb https://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib'
 
 - name: accepting java's evil licenses
   debconf:
@@ -86,19 +69,14 @@
     - curl
     - filezilla
     - gimp
-    - google-chrome-stable
     - gparted
     - gtk-recordmydesktop
     - htop
     - imagemagick
     - indicator-multiload
     - iotop
-    - john
-    - libreoffice
     - mercurial
     - nmap
-    - npm
-    - nvidia-390
     - openvpn
     - oracle-java8-installer
     - peek
@@ -159,7 +137,7 @@
 
 - name: add docker deb repo
   apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
 
 - name: install docker ce
   apt:
@@ -169,19 +147,3 @@
 - name: install docker python modules
   pip:
     name: docker-compose
-
-- name: install n node package
-  npm:
-    name: n
-    global: yes
-
-- name: copy over lenovo dock udev rules for monitor management
-  copy:
-    src: 84-thinkpad-dock.rules
-    dest: /etc/udev/rules.d/
-  notify: reload udev rules
-
-- name: copy over lenovo dock monitor changing script
-  template:
-    src: monitors.sh.j2
-    dest: /usr/local/bin/monitors.sh

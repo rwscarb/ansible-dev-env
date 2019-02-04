@@ -1,1 +1,0 @@
-SUBSYSTEM=="usb", ACTION=="add|remove", ENV{ID_VENDOR_ID}=="17ef", ENV{ID_MODEL_ID}=="1010", RUN+="/usr/local/bin/monitors.sh"

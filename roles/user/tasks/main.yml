@@ -24,12 +24,6 @@
     chdir: ~/.dot-files
   when: dot_files is changed
 
-- name: installing virtualenvwrapper for managing python virtualenvs
-  pip:
-    name: virtualenvwrapper
-    state: latest
-    extra_args: --user
-
 - name: install tmux settings
   command: '{{ item }}'
   with_items:
