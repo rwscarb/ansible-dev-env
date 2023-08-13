@@ -1,111 +1,67 @@
 ---
 
-- name: installing common packages
+- name: installing common packages and pyenv deps
   apt:
-    name: '{{ item }}'
+    name:
+      - build-essential
+      - curl
+      - git
+      - libbz2-dev
+      - libffi-dev
+      - liblzma-dev
+      - libncurses5-dev
+      - libncursesw5-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - linux-headers-generic
+      - llvm
+      - tk-dev
+      - wget
+      - xz-utils
+      - zlib1g-dev
+      - zsh
     state: latest
-  with_items:
-    - git
-    - linux-headers-generic
-    - python-pip
-    - python-apt
-    - python-dev
-    - python-setuptools
-    - virtualenvwrapper
-    - zsh
-
-- name: installing global python packages
-  pip:
-    name: '{{ item }}'
-    state: latest
-  with_items:
-    - pip
-    - ipython
-    - httpie
-
-- name: adding custom ppa's, thanks guys!
-  apt_repository:
-    repo: '{{ item }}'
-  with_items:
-    - ppa:webupd8team/java       # Java, the easy way
-    - ppa:linrunner/tlp          # thinkpad power settings
-    - ppa:peek-developers/stable # gif capture recorder
-    - ppa:nathan-renniewaldock/flux
-
-- name: adding third party keys to aptitude
-  apt_key:
-    url: '{{ item }}'
-  with_items:
-    - https://www.virtualbox.org/download/oracle_vbox_2016.asc
-
-- name: adding third party repositories to aptitude
-  apt_repository:
-    repo: '{{ item }}'
-  with_items:
-    - 'deb https://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib'
-
-- name: accepting java's evil licenses
-  debconf:
-    name: oracle-java8-installer
-    question: shared/accepted-oracle-license-v1-1
-    value: 'true'
-    vtype: select
 
 - name: installing useful packages
   apt:
-    name: '{{ item }}'
+    name:
+      - autojump
+      - awscli
+      - ca-certificates
+      - cewl
+      - cloc
+      - cmake
+      - compiz
+      - compizconfig-settings-manager
+      - compiz-plugins
+      - curl
+      - filezilla
+      - gimp
+      - gparted
+      - htop
+      - imagemagick
+      - indicator-multiload
+      - iotop
+      - nmap
+      - openvpn
+      - rdesktop
+      - recordmydesktop
+      - sshfs
+      - sysstat
+      - tmux
+      - tree
+      - vlc
+      - whois
+      - wireshark
+      - xclip
+      - xfce4-goodies
+      - xscreensaver
+      - xscreensaver-data
+      - xscreensaver-data-extra
+      - xscreensaver-screensaver-bsod
+      - zeal
     state: latest
-  with_items:
-    - awscli
-    - autojump
-    - ca-certificates
-    - cewl
-    - cloc
-    - cmake
-    - compiz
-    - compizconfig-settings-manager
-    - compiz-plugins
-    - cups-pdf
-    - curl
-    - filezilla
-    - gimp
-    - gparted
-    - gtk-recordmydesktop
-    - htop
-    - imagemagick
-    - indicator-multiload
-    - iotop
-    - mercurial
-    - nmap
-    - openvpn
-    - oracle-java8-installer
-    - peek
-    - postgresql
-    - postgresql-contrib
-    - python-lxml
-    - python-compizconfig
-    - rdesktop
-    - redshift-gtk
-    - sqlite3
-    - sshfs
-    - sysstat
-    - tlp
-    - tmux
-    - tree
-    - vim-gnome
-    - virtualbox
-    - vlc
-    - whois
-    - wireshark
-    - xchat
-    - xclip
-    - xfce4-goodies
-    - xscreensaver
-    - xscreensaver-data
-    - xscreensaver-data-extra
-    - xscreensaver-screensaver-bsod
-    - xubuntu-restricted-extras
-    - zeal
 
 - name: create wireshark group
   group:
@@ -115,13 +71,6 @@
   apt:
     name: light-locker
     state: absent
-
-- name: setting fs.inotify watches to 100,000 to make dropbox happy
-  lineinfile:
-    dest: /etc/sysctl.conf
-    regexp: ^fs.inotify.max_user_watches=
-    line: fs.inotify.max_user_watches=100000
-  notify: reread kernel options
 
 - name: enable sysstat
   lineinfile:
@@ -143,7 +92,3 @@
   apt:
     name: docker-ce
     update_cache: yes
-
-- name: install docker python modules
-  pip:
-    name: docker-compose

@@ -6,69 +6,27 @@
     shell: /usr/bin/zsh
     groups:
       - plugdev
-      - vboxusers
       - wireshark
       - docker
     append: yes
   become_user: root
 
-- name: fetch dot-files
-  git:
-    repo: https://github.com/rwscarb/dot-files.git
-    dest: ~/.dot-files
-  register: dot_files
-
-- name: install dot-files
-  command: ~/.dot-files/install.sh
+- name: install pyenv
+  command: curl https://pyenv.run | bash
   args:
-    chdir: ~/.dot-files
-  when: dot_files is changed
+    creates: /home/{{ user }}/.pyenv
+
+- name: create dev virtualenv
+  pip:
+    name: '{{ item }}'
+    state: latest
+    virtualenv: /home/{{ user }}/.pyenv/versions/dev
+    virtualenv_command: pyenv
+  with_items:
+    - ipython
+    - httpie
 
 - name: install tmux settings
-  command: '{{ item }}'
-  with_items:
-    - tmux start-server
-    - tmux new-session -d
-    - ~/.tmux/plugins/tpm/scripts/install_plugins.sh
-    - tmux kill-server
-  when: dot_files is changed
-
-- name: installing vim plugins
-  command: vim +PluginInstall +qall
-  args:
-    creates: ~/.dot-files/vim/vim/bundle/ctrlp.vim
-
-- name: creating application preferences directory
-  file:
-    state: directory
-    path: ~/.local/share/applications
-
-- name: making vim the default text editor
-  copy:
-    src: defaults.list
-    dest: ~/.local/share/applications/defaults.list
-
-- name: copy xscreensaver settings
-  copy:
-    src: xscreensaver
-    dest: ~/.xscreensaver
-
-- name: applying custom keyboard shortcuts
-  copy:
-    src: xfce4-keyboard-shortcuts.xml
-    dest: ~/.config/xfce4/xfconf/xfce-perchannel-xml/
-
-- name: copying compiz settings to ansible file cache
-  copy:
-    src: compiz.profile
-    dest: '~/'
-  register: new_compiz_settings
-
-- name: import compiz settings
-  command: python -c "import compizconfig; import os; compizconfig.Context().Import(os.path.expanduser('~/compiz.profile'))"
-  when: new_compiz_settings is changed
-
-- name: make compiz the default windows manager
-  copy:
-    src: xfce4-session.xml
-    dest: ~/.config/xfce4/xfconf/xfce-perchannel-xml/
+  template:
+    src: files/tmux.conf
+    dest: /home/{{ user }}/.tmux.conf
