@@ -29,6 +29,7 @@
       - autojump
       - awscli
       - ca-certificates
+      - caffeine
       - cewl
       - cloc
       - cmake
@@ -44,9 +45,11 @@
       - indicator-multiload
       - iotop
       - nmap
+      - nvidia-docker2
       - openvpn
       - rdesktop
       - recordmydesktop
+      - redshift
       - sshfs
       - sysstat
       - tmux
