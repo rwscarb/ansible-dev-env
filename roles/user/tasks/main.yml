@@ -30,3 +30,8 @@
   template:
     src: files/tmux.conf
     dest: /home/{{ user }}/.tmux.conf
+
+- name: install ideavimrc
+  template:
+    src: files/ideavimrc
+    dest: /home/{{ user }}/.ideavimrc

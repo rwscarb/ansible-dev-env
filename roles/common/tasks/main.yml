@@ -51,6 +51,7 @@
       - recordmydesktop
       - redshift
       - sshfs
+      - sshuttle
       - sysstat
       - tmux
       - tree
